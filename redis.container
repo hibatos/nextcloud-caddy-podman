@@ -1,0 +1,13 @@
+[Unit]
+Description=redis service
+
+[Container]
+ContainerName=redis
+Image=docker.io/library/redis:latest
+Exec=--requirepass mc34805vmx483md
+Network=nextcloud.network
+PodmanArgs=--userns=keep-id:uid=999,gid=999 --network-alias redis
+IP=172.16.0.4
+
+[Install]
+WantedBy=default.target

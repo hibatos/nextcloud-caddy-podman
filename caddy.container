@@ -1,0 +1,20 @@
+[Unit]
+Description=Caddy Reverse Proxy
+
+#AssertPathIsDirectory=%h/caddy
+
+[Service]
+ExecStartPre=mkdir -p %h/caddy
+
+[Container]
+ContainerName=caddy
+Image=docker.io/lucaslorentz/caddy-docker-proxy:2.8.10
+PublishPort=80:80
+PublishPort=443:443
+Network=nextcloud.network
+IP=172.16.0.6
+
+Environment=CADDY_INGRESS_NETWORKS=systemd-nextcloud
+
+Volume=%h/caddy:/data
+Volume=/run/user/1001/podman/podman.sock:/var/run/docker.sock

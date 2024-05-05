@@ -1,0 +1,18 @@
+[Unit]
+Description=nextcloud cron service
+After=nextcloud.container
+Requires=nextcloud.container
+
+#AssertPathIsDirectory=%h/nextcloud_data
+
+[Container]
+ContainerName=nextcloudcron
+Image=docker.io/nextcloud:stable
+Network=nextcloud.network
+IP=172.16.0.2
+Volume=%h/nextcloud_data:/var/www/html
+#Entrypoint='/cron.sh' #broken
+PodmanArgs=--entrypoint=/cron.sh
+
+[Install]
+WantedBy=default.target

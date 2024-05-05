@@ -1,0 +1,37 @@
+[Unit]
+Description=nextcloud service
+Requires=mariadb.container
+Requires=redis.container
+After=mariadb.container
+
+#AssertPathIsDirectory=%h/nextcloud_data
+
+[Container]
+ContainerName=app
+
+Image=docker.io/nextcloud:stable
+
+Network=nextcloud.network
+IP=172.16.0.3
+
+Environment=REDIS_HOST=redis
+Environment=REDIS_HOST_PASSWORD=mc34805vmx483md
+Environment=MYSQL_PASSWORD=v9pm45043xdnv549
+Environment=MYSQL_DATABASE=nextcloud
+Environment=MYSQL_USER=nextcloud
+Environment=MYSQL_HOST=mariadb
+Environment=TRUSTED_PROXIES=172.16.0.6
+
+PodmanArgs=--entrypoint='["/bin/sh", "-c", "apt update -y && apt install smbclient -y && /entrypoint.sh apache2-foreground"]'
+
+Label=caddy=becker-rheda.de
+Label=caddy.reverse_proxy="{{upstreams}}"
+Label=caddy.header=/*
+Label=caddy.header.Strict-Transport-Security='"max-age=15552000;"'
+Label=caddy.rewrite_0='/.well-known/carddav /remote.php/dav'
+Label=caddy.rewrite_1='/.well-known/caldav /remote.php/dav'
+
+Volume=%h/nextcloud_data:/var/www/html
+
+[Install]
+WantedBy=default.target

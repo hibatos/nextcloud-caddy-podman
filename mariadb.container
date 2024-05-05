@@ -1,0 +1,23 @@
+[Unit]
+Description=mariadb service
+
+#AssertPathIsDirectory=%h/mariadb_data
+
+[Service]
+ExecStartPre=mkdir -p %h/mariadb_data
+
+[Container]
+ContainerName=mariadb
+Image=docker.io/library/mariadb:latest
+Exec=--transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+Network=nextcloud.network
+IP=172.16.0.5
+Volume=%h/mariadb_data:/var/lib/mysql:Z
+PodmanArgs=--userns=keep-id:uid=999,gid=999 --network-alias=mariadb
+Environment=MARIADB_ROOT_PASSWORD=0whiweuhf9we823h
+Environment=MARIADB_PASSWORD=v9pm45043xdnv549
+Environment=MARIADB_DATABASE=nextcloud
+Environment=MARIADB_USER=nextcloud
+
+[Install]
+WantedBy=default.target
